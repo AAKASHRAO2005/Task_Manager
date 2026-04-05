@@ -7,8 +7,12 @@ requires-python = ">=3.10"
 dependencies = [
     "openai",
     "python-dotenv",
-    "streamlit"
+    "streamlit",
+    "openenv-core>=0.2.0"
 ]
+
+[project.scripts]
+server = "server.app:main"
 
 [build-system]
 requires = ["setuptools>=61.0"]
