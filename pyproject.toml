@@ -1,19 +1,10 @@
 [project]
 name = "task-manager"
 version = "0.1.0"
-description = "Task Manager agent"
-readme = "README.md"
-requires-python = ">=3.10"
-dependencies = [
-    "openai",
-    "python-dotenv",
-    "streamlit",
-    "openenv-core>=0.2.0"
-]
-
-[project.scripts]
-server = "server.app:main"
+description = "Task Manager OpenEnv project"
+authors = ["Akash Rao"]
+dependencies = []
 
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
