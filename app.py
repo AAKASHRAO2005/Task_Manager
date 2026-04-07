@@ -1,11 +1,11 @@
-from flask import Flask, request, jsonify
+from flask import Flask, jsonify, request
+
 from environment import TaskManagerEnv
 from models import Action
 
 app = Flask(__name__)
 
 env = TaskManagerEnv()
-current_state = env.reset()
 
 
 def serialize_task(task):
@@ -27,45 +27,48 @@ def serialize_observation(obs):
     }
 
 
-@app.route("/", methods=["GET"])
+@app.get("/")
 def home():
-    return jsonify({"status": "ok", "message": "Task Manager OpenEnv API running"}), 200
+    return jsonify({"status": "ok", "message": "Task Manager OpenEnv API running"})
 
 
-@app.route("/reset", methods=["POST"])
+@app.get("/health")
+def health():
+    return jsonify({"status": "healthy"})
+
+
+@app.post("/reset")
 def reset():
-    global env, current_state
+    global env
     data = request.get_json(silent=True) or {}
-    difficulty = data.get("task", "easy")
+    difficulty = data.get("task") or data.get("difficulty") or "easy"
     env = TaskManagerEnv(difficulty=difficulty)
-    current_state = env.reset()
-    return jsonify(serialize_observation(current_state)), 200
+    obs = env.reset()
+    return jsonify({"observation": serialize_observation(obs), "reward": 0.0, "done": False})
 
 
-@app.route("/state", methods=["GET"])
+@app.get("/state")
 def state():
-    global current_state
-    current_state = env.state()
-    return jsonify(serialize_observation(current_state)), 200
+    obs = env.state()
+    return jsonify(serialize_observation(obs))
 
 
-@app.route("/step", methods=["POST"])
+@app.post("/step")
 def step():
-    global current_state
     data = request.get_json(silent=True) or {}
-
     if "task_id" not in data:
         return jsonify({"error": "task_id is required"}), 400
 
     action = Action(task_id=int(data["task_id"]))
-    current_state, reward, done, info = env.step(action)
-
-    return jsonify({
-        "observation": serialize_observation(current_state),
-        "reward": float(reward),
-        "done": bool(done),
-        "info": info,
-    }), 200
+    obs, reward, done, info = env.step(action)
+    return jsonify(
+        {
+            "observation": serialize_observation(obs),
+            "reward": float(reward),
+            "done": bool(done),
+            "info": info,
+        }
+    )
 
 
 if __name__ == "__main__":

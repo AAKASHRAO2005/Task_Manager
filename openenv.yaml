@@ -1,32 +1,23 @@
-name: task-manager-openenv
-version: "1.0"
-
-observation:
-  type: Observation
-
-action:
-  type: Action
-
-reward:
-  type: float
-
-endpoints:
-  reset: /reset
-  step: /step
-  state: /state
+spec_version: 1
+name: task_manager_env
+type: environment
+runtime: docker
+app: server.app:app
+port: 7860
+description: Task scheduling environment with 3 graded tasks
 
 tasks:
   - id: easy
     description: Complete simple tasks with maximum reward
     max_score: 1.0
-    grader: tasks:grade_easy
+    grader: grader:grade_easy
 
   - id: medium
     description: Balance priority and deadline while completing tasks
     max_score: 1.0
-    grader: tasks:grade_medium
+    grader: grader:grade_medium
 
   - id: hard
     description: Maximize completion and minimize missed tasks under tighter constraints
     max_score: 1.0
-    grader: tasks:grade_hard
+    grader: grader:grade_hard

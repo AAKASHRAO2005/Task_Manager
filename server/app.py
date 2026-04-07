@@ -1,5 +1,11 @@
+try:
+    from app import app
+except ImportError:  # pragma: no cover
+    from ..app import app
+
+
 def main():
-    print("Server entry point is ready")
+    app.run(host="0.0.0.0", port=7860)
 
 
 if __name__ == "__main__":
