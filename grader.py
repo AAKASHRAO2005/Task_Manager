@@ -1,5 +1,3 @@
-"""Task-specific graders for the Task Manager environment."""
-
 from environment import TaskManagerEnv
 
 

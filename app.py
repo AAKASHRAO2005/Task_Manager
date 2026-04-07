@@ -4,7 +4,6 @@ from environment import TaskManagerEnv
 from models import Action
 
 app = Flask(__name__)
-
 env = TaskManagerEnv()
 
 
@@ -44,7 +43,11 @@ def reset():
     difficulty = data.get("task") or data.get("difficulty") or "easy"
     env = TaskManagerEnv(difficulty=difficulty)
     obs = env.reset()
-    return jsonify({"observation": serialize_observation(obs), "reward": 0.0, "done": False})
+    return jsonify({
+        "observation": serialize_observation(obs),
+        "reward": 0.0,
+        "done": False
+    })
 
 
 @app.get("/state")
@@ -61,14 +64,13 @@ def step():
 
     action = Action(task_id=int(data["task_id"]))
     obs, reward, done, info = env.step(action)
-    return jsonify(
-        {
-            "observation": serialize_observation(obs),
-            "reward": float(reward),
-            "done": bool(done),
-            "info": info,
-        }
-    )
+
+    return jsonify({
+        "observation": serialize_observation(obs),
+        "reward": float(reward),
+        "done": bool(done),
+        "info": info,
+    })
 
 
 if __name__ == "__main__":

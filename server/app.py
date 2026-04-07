@@ -1,7 +1,4 @@
-try:
-    from app import app
-except ImportError:  # pragma: no cover
-    from ..app import app
+from app import app
 
 
 def main():
