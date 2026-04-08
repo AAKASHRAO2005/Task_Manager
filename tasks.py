@@ -1,20 +1,25 @@
-from environment import TaskManagerEnv
-
-
-def grade_easy(env: TaskManagerEnv) -> float:
+def grade_easy(env):
     total_tasks = len(env.tasks) or 1
-    return max(0.0, min(1.0, env.completed / total_tasks))
+    return env.completed / total_tasks
 
 
-def grade_medium(env: TaskManagerEnv) -> float:
-    total_weight = sum(task.priority for task in env.tasks) or 1
-    completed_weight = sum(
-        task.priority for task in env.tasks if getattr(task, "completed", False)
-    )
-    return max(0.0, min(1.0, completed_weight / total_weight))
+def grade_medium(env):
+    total = 0
+    done = 0
+
+    for t in env.tasks:
+        total += t.priority
+        if t.completed:
+            done += t.priority
+
+    return done / total if total else 0.0
 
 
-def grade_hard(env: TaskManagerEnv) -> float:
+def grade_hard(env):
     total_tasks = len(env.tasks) or 1
-    score = max(0, env.completed - env.missed)
-    return max(0.0, min(1.0, score / total_tasks))
+    score = env.completed - env.missed
+
+    if score < 0:
+        score = 0
+
+    return score / total_tasks

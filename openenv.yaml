@@ -1,10 +1,19 @@
-spec_version: 1
-name: task_manager_env
-type: environment
-runtime: docker
-app: server.app:app
-port: 7860
-description: Task scheduling environment with 3 graded tasks
+name: task-manager-openenv
+version: "1.0"
+
+observation:
+  type: Observation
+
+action:
+  type: Action
+
+reward:
+  type: float
+
+endpoints:
+  reset: /reset
+  step: /step
+  state: /state
 
 tasks:
   - id: easy
