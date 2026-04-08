@@ -1,25 +1,14 @@
-def grade_easy(env):
-    total_tasks = len(env.tasks) or 1
-    return env.completed / total_tasks
-
-
-def grade_medium(env):
-    total = 0
-    done = 0
+def grade_hard(env):
+    total_possible = 0
+    achieved = 0
 
     for t in env.tasks:
-        total += t.priority
-        if t.completed:
-            done += t.priority
+        weight = (t.priority * 2) + max(1, 10 - t.deadline)
+        total_possible += weight
 
-    return done / total if total else 0.0
+        if getattr(t, "completed", False):
+            achieved += weight
 
-
-def grade_hard(env):
-    total_tasks = len(env.tasks) or 1
-    score = env.completed - env.missed
-
-    if score < 0:
-        score = 0
-
-    return score / total_tasks
+    penalty = env.missed * 2
+    score = (achieved - penalty) / (total_possible or 1)
+    return max(0.0, min(1.0, float(score)))

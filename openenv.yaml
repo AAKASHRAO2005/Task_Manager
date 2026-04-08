@@ -17,16 +17,16 @@ endpoints:
 
 tasks:
   - id: easy
-    description: Complete simple tasks with maximum reward
+    description: Complete as many tasks as possible
     max_score: 1.0
     grader: tasks:grade_easy
 
   - id: medium
-    description: Balance priority and deadline while completing tasks
+    description: Prefer high-priority tasks for better reward
     max_score: 1.0
     grader: tasks:grade_medium
 
   - id: hard
-    description: Maximize completion and minimize missed tasks under tighter constraints
+    description: Optimize priority, urgency, and missed-task penalties under constraints
     max_score: 1.0
     grader: tasks:grade_hard
